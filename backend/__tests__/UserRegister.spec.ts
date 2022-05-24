@@ -1,7 +1,7 @@
 import supertest from "supertest";
 import { app } from "../app";
 
-describe("first", () => {
+describe("User Register", () => {
   it("should return 201 OK when signup request is valid", (done) => {
     supertest(app)
       .post("/api/1.0/users")
@@ -10,6 +10,9 @@ describe("first", () => {
         email: "user1@mail.com",
         password: "Password",
       })
-      .expect(201, done);
+      .then((res) => {
+        expect(res.status).toBe(201);
+        done();
+      });
   });
 });
