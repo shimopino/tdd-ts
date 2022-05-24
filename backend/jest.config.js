@@ -3,6 +3,7 @@ const config = {
   transform: {
     "^.+\\.ts$": ["@swc/jest"],
   },
+  testMatch: ["**/*.spec.ts"],
 };
 
 module.exports = config;
