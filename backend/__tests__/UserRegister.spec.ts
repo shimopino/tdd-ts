@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import { app } from "../app";
+import { app } from "../src/app";
 
 describe("User Register", () => {
   it("should return 201 OK when signup request is valid", (done) => {
