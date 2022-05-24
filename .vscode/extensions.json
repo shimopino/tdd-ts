@@ -3,6 +3,7 @@
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
     "usernamehw.errorlens",
-    "patbenatar.advanced-new-file"
+    "patbenatar.advanced-new-file",
+    "42Crunch.vscode-openapi"
   ]
 }

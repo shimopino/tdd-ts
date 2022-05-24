@@ -1,0 +1,31 @@
+openapi: 3.0.0
+info:
+  title: "フロントエンドとバックエンドでTDDを行う"
+  version: 1.0.0
+
+paths:
+  /api/1.0/users:
+    post:
+      summary: ユーザー登録を行う
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user"
+            example:
+              { username: "shimo", email: "shimo@mail.com", password: "sample" }
+      responses:
+        201:
+          description: User Created
+
+components:
+  schemas:
+    user:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
