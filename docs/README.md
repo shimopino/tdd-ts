@@ -18,6 +18,8 @@ npm install --save-dev jest @types/jest supertest @types/supertest @swc/core @sw
 npm install --save-dev eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin
 
 npm install --save-dev prettier eslint-config-prettier
+
+npm install sequelize sqlite3
 ```
 
 参考資料
