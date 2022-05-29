@@ -11,8 +11,7 @@ app.post("/api/1.0/users", (req: Request, res: Response) => {
 
   hash(req.body.password, salt).then((hash) => {
     const user = {
-      username: req.body.username,
-      email: req.body.email,
+      ...req.body,
       password: hash,
     };
 
