@@ -56,4 +56,23 @@ describe("User Register", () => {
         });
       });
   });
+
+  it("saves the username and email to database", (done) => {
+    supertest(app)
+      .post("/api/1.0/users")
+      .send({
+        username: "user1",
+        email: "user1@mail.com",
+        password: "Password",
+      })
+      .then(() => {
+        // query user table
+        User.findAll().then((users) => {
+          const savedUser = users[0];
+          expect(savedUser.username).toBe("user1");
+          expect(savedUser.email).toBe("user1@mail.com");
+          done();
+        });
+      });
+  });
 });
