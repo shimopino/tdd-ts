@@ -12,9 +12,9 @@ router.post(
     if (user.username === null)
       return res.status(400).send({
         validationErrors: {
+          username: "Username cannot be null",
         },
       });
-
 
     await save(user);
 
