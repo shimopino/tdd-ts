@@ -1,4 +1,5 @@
 import express, { Request, Response } from "express";
+import { hash } from "bcrypt";
 import { User } from "./user/user";
 
 const app = express();
@@ -6,8 +7,18 @@ const app = express();
 app.use(express.json());
 
 app.post("/api/1.0/users", (req: Request, res: Response) => {
-  User.create(req.body).then(() => {
-    return res.status(201).send({ message: "User Created" });
+  const salt = 10;
+
+  hash(req.body.password, salt).then((hash) => {
+    const user = {
+      username: req.body.username,
+      email: req.body.email,
+      password: hash,
+    };
+
+    User.create(user).then(() => {
+      return res.status(201).send({ message: "User Created" });
+    });
   });
 });
 
