@@ -1,16 +1,17 @@
-import { hash } from "bcrypt";
 import express from "express";
-import { User } from "./user";
+import { CustomRequest, CreateUserDTO } from "./dtos";
+
+import { save } from "./UserService";
 
 const router = express.Router();
 
-router.post("/api/1.0/users", async (req, res) => {
-  const salt = 10;
-  const hashed = await hash(req.body.password, salt);
-  const user = { ...req.body, password: hashed };
-  await User.create(user);
+router.post(
+  "/api/1.0/users",
+  async (req: CustomRequest<CreateUserDTO>, res) => {
+    await save(req.body);
 
-  return res.status(201).send({ message: "User Created" });
-});
+    return res.status(201).send({ message: "User Created" });
+  }
+);
 
 export default router;
