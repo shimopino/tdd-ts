@@ -3,7 +3,18 @@ POST http://localhost:3010/api/1.0/users
 Content-Type: application/json
 
 {
-    "username": "user",
+    "username": null,
     "email": "user@mail.com",
     "password": "P@aaword"
 }
+
+### Cannnot Create a User without username
+POST http://localhost:3010/api/1.0/users
+Content-Type: application/json
+
+{
+    "username": null,
+    "email": "user@mail.com",
+    "password": "P@aaword"
+}
+
