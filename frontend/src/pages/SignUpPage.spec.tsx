@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it } from "vitest";
+import userEvent from "@testing-library/user-event";
 import { SignUpPage } from "./SignUpPage";
 
 describe("Sign Up Page", () => {
@@ -58,6 +59,20 @@ describe("Sign Up Page", () => {
       render(<SignUpPage />);
       const button = screen.getByRole("button", { name: "Sign Up" });
       expect(button).toBeDisabled();
+    });
+  });
+
+  describe("Interaction", () => {
+    it("enables the button when password and password repeat fields have same value", () => {
+      render(<SignUpPage />);
+      const passwordInput = screen.getByLabelText("Password");
+      const passwordRepeatInput = screen.getByLabelText("Password Repeat");
+
+      userEvent.type(passwordInput, "P@ssword");
+      userEvent.type(passwordRepeatInput, "P@ssword");
+
+      const button = screen.getByRole("button", { name: "Sign Up" });
+      expect(button).toBeEnabled();
     });
   });
 });
