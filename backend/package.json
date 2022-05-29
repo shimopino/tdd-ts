@@ -7,8 +7,8 @@
   "main": "index.js",
   "scripts": {
     "build": "npx tsc",
-    "start": "cross-env NODE_ENV=development node dist/index.js",
-    "dev": "concurrently \"npx tsc --watch\" \"cross-env NODE_ENV=development nodemon -q dist/index.js\"",
+    "start": "npm run build && cross-env NODE_ENV=development node dist/src/index.js",
+    "dev": "concurrently \"npx tsc --watch\" \"cross-env NODE_ENV=development nodemon -q dist/src/index.js\"",
     "test": "cross-env NODE_ENV=test jest --watch",
     "lint": "eslint . --ext .ts"
   },
@@ -38,6 +38,7 @@
     "nodemon": "^2.0.16",
     "prettier": "^2.6.2",
     "supertest": "^6.2.3",
+    "ts-node": "^10.8.0",
     "typescript": "^4.7.2"
   }
 }
