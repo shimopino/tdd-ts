@@ -2,7 +2,30 @@
 
 ## 環境構築
 
+## フロントエンド
+
+`npm` のワークスペース機能を使用するため、下記のコマンドを実行する際には `-w frontend` を末尾に付与する。
+
+```bash
+# Reactを使用する
+npm install --save react react-dom -w frontend
+npm install --save-dev @types/react @types/react-dom -w frontend
+
+# ビルドシステムに Vitejs を採用する
+npm install --save-dev typescript -w frontend
+npm install --save-dev vite @vitejs/plugin-react -w frontend
+
+# フロントエンド側でTypeScript設定を作成する
+npx -w frontend tsc --init
+```
+
+参考資料
+
+- [Vite/React Trying Online](https://vitejs.dev/guide/#trying-vite-online)
+
 ### バックエンド
+
+`npm` のワークスペース機能を使用するため、下記のコマンドを実行する際には `-w backend` を末尾に付与する。
 
 ```bash
 npm install express
