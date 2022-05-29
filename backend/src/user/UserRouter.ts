@@ -9,7 +9,12 @@ router.post(
   "/api/1.0/users",
   async (req: CustomRequest<CreateUserDTO>, res) => {
     const user = { ...req.body };
-    if (user.username === null) return res.status(400).send();
+    if (user.username === null)
+      return res.status(400).send({
+        validationErrors: {
+        },
+      });
+
 
     await save(user);
 
