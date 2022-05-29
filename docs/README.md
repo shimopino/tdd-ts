@@ -17,11 +17,21 @@ npm install --save-dev vite @vitejs/plugin-react -w frontend
 
 # フロントエンド側でTypeScript設定を作成する
 npx -w frontend tsc --init
+
+# テスト設定を使用する
+npm install --save-dev vitest -w frontend
+
+# Reactでのテスト設定を行う
+npm install --save-dev @testing-library/react -w frontend
+npm install --save-dev @testing-library/jest-dom -w frontend
+npm install --save-dev @testing-library/user-event @types/testing-library__user-event -w frontend
+npm install --save-dev happy-dom -w frontend
 ```
 
 参考資料
 
 - [Vite/React Trying Online](https://vitejs.dev/guide/#trying-vite-online)
+- [あたらしいテストフレームワーク Vitest を React で試してみた](https://dev.classmethod.jp/articles/intro-vitest/)
 
 ### バックエンド
 
