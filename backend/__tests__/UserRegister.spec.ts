@@ -29,4 +29,21 @@ describe("User Register", () => {
         done();
       });
   });
+
+  it("saves the user to database", (done) => {
+    supertest(app)
+      .post("/api/1.0/users")
+      .send({
+        username: "user1",
+        email: "user1@mail.com",
+        password: "Password",
+      })
+      .then(() => {
+        // query user table
+        User.findAll().then((users) => {
+          expect(users.length).toBe(1);
+          done();
+        });
+      });
+  });
 });
