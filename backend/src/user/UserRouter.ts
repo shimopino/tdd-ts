@@ -8,7 +8,10 @@ const router = express.Router();
 router.post(
   "/api/1.0/users",
   async (req: CustomRequest<CreateUserDTO>, res) => {
-    await save(req.body);
+    const user = { ...req.body };
+    if (user.username === null) return res.status(400).send();
+
+    await save(user);
 
     return res.status(201).send({ message: "User Created" });
   }
