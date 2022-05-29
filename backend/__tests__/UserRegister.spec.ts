@@ -1,5 +1,15 @@
 import supertest from "supertest";
 import { app } from "../src/app";
+import { User } from "../src/user/user";
+import { sequelize } from "../src/config/database";
+
+beforeAll(() => {
+  return sequelize.sync();
+});
+
+beforeEach(() => {
+  return User.destroy({ truncate: true });
+});
 
 describe("User Register", () => {
   it("should return 201 OK when signup request is valid", (done) => {
