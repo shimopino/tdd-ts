@@ -6,5 +6,6 @@
   },
   "eslint.workingDirectories": ["./backend", "./frontend"],
   "typescript.suggest.completeFunctionCalls": true,
-  "typescript.preferences.importModuleSpecifier": "relative"
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "scm.defaultViewMode": "tree"
 }
