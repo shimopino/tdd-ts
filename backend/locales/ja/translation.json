@@ -6,5 +6,6 @@
   "password_null": "パスワードにNullを指定できません",
   "password_size": "パスワードは最小で6文字を指定してください",
   "password_pattern": "パスワードには最低でも大文字1文字、小文字1文字、数字1文字を含んでいる必要があります",
-  "email_in_use": "メールアドレスは既に使用されています"
+  "email_in_use": "メールアドレスは既に使用されています",
+  "user_create_success": "ユーザーを作成しました"
 }

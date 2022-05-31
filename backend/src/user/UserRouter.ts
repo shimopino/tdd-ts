@@ -50,7 +50,7 @@ router.post(
 
     try {
       await save(user);
-      return res.status(201).send({ message: "User Created" });
+      return res.status(201).send({ message: req.t("user_create_success") });
     } catch (error) {
       return res
         .status(400)
