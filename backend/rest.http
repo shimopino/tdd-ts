@@ -3,9 +3,9 @@ POST http://localhost:3010/api/1.0/users
 Content-Type: application/json
 
 {
-    "username": null,
-    "email": "user@mail.com",
-    "password": "P@aaword"
+    "username": "user1",
+    "email": "user1@mail.com",
+    "password": "P4aaword"
 }
 
 ### Cannnot Create a User without username
@@ -15,6 +15,6 @@ Content-Type: application/json
 {
     "username": null,
     "email": "user@mail.com",
-    "password": "P@aaword"
+    "password": "P4aaword"
 }
 

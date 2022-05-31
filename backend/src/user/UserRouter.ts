@@ -41,9 +41,15 @@ router.post(
     }
 
     const user = { ...req.body };
-    await save(user);
 
-    return res.status(201).send({ message: "User Created" });
+    try {
+      await save(user);
+      return res.status(201).send({ message: "User Created" });
+    } catch (error) {
+      return res
+        .status(400)
+        .send({ validationErrors: { email: "Email in use" } });
+    }
   }
 );
 
