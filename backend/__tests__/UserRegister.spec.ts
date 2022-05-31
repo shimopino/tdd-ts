@@ -17,8 +17,11 @@ const validUser = {
   password: "P4ssword",
 };
 
-const postUser = async (user = validUser) => {
-  return supertest(app).post("/api/1.0/users").send(user);
+const postUser = async (user = validUser, options = { language: "en" }) => {
+  return supertest(app)
+    .post("/api/1.0/users")
+    .set("Accept-Language", options.language)
+    .send(user);
 };
 
 describe("User Register", () => {
@@ -162,13 +165,6 @@ describe("User Register", () => {
   });
 
   describe("Internationalization", () => {
-    const postUser = (user = validUser) => {
-      return supertest(app)
-        .post("/api/1.0/users")
-        .set("Accept-Language", "ja")
-        .send(user);
-    };
-
     const username_null = "ユーザー名にNullを指定できません";
     const username_size = "4文字から32文字までの長さを指定してください";
     const email_null = "メールアドレスにNullを指定できません";
@@ -206,7 +202,7 @@ describe("User Register", () => {
         };
         user[field] = value;
 
-        const response = await postUser(user);
+        const response = await postUser(user, { language: "ja" });
 
         const body = response.body;
         expect(body.validationErrors[field]).toBe(message);
