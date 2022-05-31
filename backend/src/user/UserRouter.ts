@@ -5,19 +5,21 @@ import { save } from "./UserService";
 
 const router = express.Router();
 
+const validateUsername = (req: Request, res: Response, next: NextFunction) => {
+  const user = { ...req.body };
+  if (user.username === null)
+    return res.status(400).send({
+      validationErrors: {
+        username: "Username cannot be null",
+      },
+    });
+
+  next();
+};
+
 router.post(
   "/api/1.0/users",
-  (req: Request, res: Response, next: NextFunction) => {
-    const user = { ...req.body };
-    if (user.username === null)
-      return res.status(400).send({
-        validationErrors: {
-          username: "Username cannot be null",
-        },
-      });
-
-    next();
-  },
+  validateUsername,
   async (req: CustomRequest<CreateUserDTO>, res) => {
     const user = { ...req.body };
     await save(user);
