@@ -113,4 +113,19 @@ describe("User Register", () => {
     const body = response.body;
     expect(body.validationErrors[field]).toBe(message);
   });
+
+  it("returns size validation error when username is less than 4 characters", async () => {
+    const user = {
+      username: "les",
+      email: "user1@mail.com",
+      password: "Password",
+    };
+
+    const response = await postUser(user);
+
+    const body = response.body;
+    expect(body.validationErrors.username).toBe(
+      "Must have min 4 and max 32 characters"
+    );
+  });
 });
