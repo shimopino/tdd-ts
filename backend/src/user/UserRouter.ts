@@ -2,7 +2,8 @@ import express from "express";
 import { CustomRequest, CreateUserDTO } from "./dtos";
 import { check, validationResult } from "express-validator";
 
-import { save } from "./UserService";
+import { findByEmail, save } from "./UserService";
+import { User } from "./user";
 
 const router = express.Router();
 
@@ -19,7 +20,13 @@ router.post(
     .withMessage("Email cannot be null")
     .bail()
     .isEmail()
-    .withMessage("Email is not valid"),
+    .withMessage("Email is not valid")
+    .custom(async (email) => {
+      const user = await findByEmail(email);
+      if (user) {
+        throw new Error("Email in use");
+      }
+    }),
   check("password")
     .notEmpty()
     .withMessage("Password cannot be null")

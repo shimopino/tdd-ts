@@ -9,4 +9,8 @@ const save = async (body: CreateUserDTO) => {
   await User.create(user);
 };
 
-export { save };
+const findByEmail = async (email: string) => {
+  return await User.findOne({ where: { email } });
+};
+
+export { save, findByEmail };
