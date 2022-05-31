@@ -95,23 +95,33 @@ describe("User Register", () => {
     expect(Object.keys(body.validationErrors)).toEqual(["username", "email"]);
   });
 
+  const username_null = "Username cannot be null";
+  const username_size = "Must have min 4 and max 32 characters";
+  const email_null = "Email cannot be null";
+  const email_invalid = "Email is not valid";
+  const password_null = "Password cannot be null";
+  const password_size = "Password must be at least 6 characters";
+  const password_pattern =
+    "Password must be at least 1 uppercase, 1 lowercase letter and 1 number";
+  const email_in_use = "Email in use";
+
   it.each`
     field         | value              | message
-    ${"username"} | ${null}            | ${"Username cannot be null"}
-    ${"username"} | ${"les"}           | ${"Must have min 4 and max 32 characters"}
-    ${"username"} | ${"a".repeat(33)}  | ${"Must have min 4 and max 32 characters"}
-    ${"email"}    | ${null}            | ${"Email cannot be null"}
-    ${"email"}    | ${"mail.com"}      | ${"Email is not valid"}
-    ${"email"}    | ${"user.mail.com"} | ${"Email is not valid"}
-    ${"email"}    | ${"user@mail"}     | ${"Email is not valid"}
-    ${"password"} | ${null}            | ${"Password cannot be null"}
-    ${"password"} | ${"P4ssw"}         | ${"Password must be at least 6 characters"}
-    ${"password"} | ${"lowercase"}     | ${"Password must be at least 1 uppercase, 1 lowercase letter and 1 number"}
-    ${"password"} | ${"UPPERCASE"}     | ${"Password must be at least 1 uppercase, 1 lowercase letter and 1 number"}
-    ${"password"} | ${"1234567890"}    | ${"Password must be at least 1 uppercase, 1 lowercase letter and 1 number"}
-    ${"password"} | ${"lowerUPPER"}    | ${"Password must be at least 1 uppercase, 1 lowercase letter and 1 number"}
-    ${"password"} | ${"lower12345"}    | ${"Password must be at least 1 uppercase, 1 lowercase letter and 1 number"}
-    ${"password"} | ${"UPPER12345"}    | ${"Password must be at least 1 uppercase, 1 lowercase letter and 1 number"}
+    ${"username"} | ${null}            | ${username_null}
+    ${"username"} | ${"les"}           | ${username_size}
+    ${"username"} | ${"a".repeat(33)}  | ${username_size}
+    ${"email"}    | ${null}            | ${email_null}
+    ${"email"}    | ${"mail.com"}      | ${email_invalid}
+    ${"email"}    | ${"user.mail.com"} | ${email_invalid}
+    ${"email"}    | ${"user@mail"}     | ${email_invalid}
+    ${"password"} | ${null}            | ${password_null}
+    ${"password"} | ${"P4ssw"}         | ${password_size}
+    ${"password"} | ${"lowercase"}     | ${password_pattern}
+    ${"password"} | ${"UPPERCASE"}     | ${password_pattern}
+    ${"password"} | ${"1234567890"}    | ${password_pattern}
+    ${"password"} | ${"lowerUPPER"}    | ${password_pattern}
+    ${"password"} | ${"lower12345"}    | ${password_pattern}
+    ${"password"} | ${"UPPER12345"}    | ${password_pattern}
   `(
     "returns $message when $field is $value",
     async ({ field, value, message }) => {
@@ -129,13 +139,13 @@ describe("User Register", () => {
     }
   );
 
-  it("returns Email in use when same email is already in use", async () => {
+  it(`returns ${email_in_use} when same email is already in use`, async () => {
     await User.create({ ...validUser });
 
     const response = await postUser();
 
     const body = response.body;
-    expect(body.validationErrors.email).toBe("Email in use");
+    expect(body.validationErrors.email).toBe(email_in_use);
   });
 
   it("returns errors for both username is null and email is in use", async () => {
@@ -149,5 +159,67 @@ describe("User Register", () => {
 
     const body = response.body;
     expect(Object.keys(body.validationErrors)).toEqual(["username", "email"]);
+  });
+
+  describe("Internationalization", () => {
+    const postUser = (user = validUser) => {
+      return supertest(app)
+        .post("/api/1.0/users")
+        .set("Accept-Language", "ja")
+        .send(user);
+    };
+
+    const username_null = "ユーザー名にNullを指定できません";
+    const username_size = "4文字から32文字までの長さを指定してください";
+    const email_null = "メールアドレスにNullを指定できません";
+    const email_invalid = "メールアドレスが有効ではありません";
+    const password_null = "パスワードにNullを指定できません";
+    const password_size = "パスワードは最小で6文字を指定してください";
+    const password_pattern =
+      "パスワードには最低でも大文字1文字、小文字1文字、数字1文字を含んでいる必要があります";
+    const email_in_use = "メールアドレスは既に使用されています";
+
+    it.each`
+      field         | value              | message
+      ${"username"} | ${null}            | ${username_null}
+      ${"username"} | ${"les"}           | ${username_size}
+      ${"username"} | ${"a".repeat(33)}  | ${username_size}
+      ${"email"}    | ${null}            | ${email_null}
+      ${"email"}    | ${"mail.com"}      | ${email_invalid}
+      ${"email"}    | ${"user.mail.com"} | ${email_invalid}
+      ${"email"}    | ${"user@mail"}     | ${email_invalid}
+      ${"password"} | ${null}            | ${password_null}
+      ${"password"} | ${"P4ssw"}         | ${password_size}
+      ${"password"} | ${"lowercase"}     | ${password_pattern}
+      ${"password"} | ${"UPPERCASE"}     | ${password_pattern}
+      ${"password"} | ${"1234567890"}    | ${password_pattern}
+      ${"password"} | ${"lowerUPPER"}    | ${password_pattern}
+      ${"password"} | ${"lower12345"}    | ${password_pattern}
+      ${"password"} | ${"UPPER12345"}    | ${password_pattern}
+    `(
+      "returns $message when $field is $value",
+      async ({ field, value, message }) => {
+        const user = {
+          username: "user1",
+          email: "user1@mail.com",
+          password: "Password",
+        };
+        user[field] = value;
+
+        const response = await postUser(user);
+
+        const body = response.body;
+        expect(body.validationErrors[field]).toBe(message);
+      }
+    );
+
+    it(`returns ${email_in_use} when same email is already in use`, async () => {
+      await User.create({ ...validUser });
+
+      const response = await postUser();
+
+      const body = response.body;
+      expect(body.validationErrors.email).toBe(email_in_use);
+    });
   });
 });
