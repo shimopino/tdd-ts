@@ -47,15 +47,8 @@ router.post(
     }
 
     const user = { ...req.body };
-
-    try {
-      await save(user);
-      return res.status(201).send({ message: req.t("user_create_success") });
-    } catch (error) {
-      return res
-        .status(400)
-        .send({ validationErrors: { email: "Email in use" } });
-    }
+    await save(user);
+    return res.status(201).send({ message: req.t("user_create_success") });
   }
 );
 
