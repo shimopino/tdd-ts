@@ -17,9 +17,22 @@ const validateUsername = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
+const validateEmail = (req: Request, res: Response, next: NextFunction) => {
+  const user = { ...req.body };
+  if (user.email === null)
+    return res.status(400).send({
+      validationErrors: {
+        email: "Email cannot be null",
+      },
+    });
+
+  next();
+};
+
 router.post(
   "/api/1.0/users",
   validateUsername,
+  validateEmail,
   async (req: CustomRequest<CreateUserDTO>, res) => {
     const user = { ...req.body };
     await save(user);
