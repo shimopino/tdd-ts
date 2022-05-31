@@ -174,6 +174,7 @@ describe("User Register", () => {
     const password_pattern =
       "パスワードには最低でも大文字1文字、小文字1文字、数字1文字を含んでいる必要があります";
     const email_in_use = "メールアドレスは既に使用されています";
+    const user_create_success = "ユーザーを作成しました";
 
     it.each`
       field         | value              | message
@@ -212,10 +213,15 @@ describe("User Register", () => {
     it(`returns ${email_in_use} when same email is already in use`, async () => {
       await User.create({ ...validUser });
 
-      const response = await postUser();
+      const response = await postUser({ ...validUser }, { language: "ja" });
 
       const body = response.body;
       expect(body.validationErrors.email).toBe(email_in_use);
+    });
+
+    it(`returns success message of ${user_create_success} when signup request is valid`, async () => {
+      const response = await postUser({ ...validUser }, { language: "ja" });
+      expect(response.body.message).toBe(user_create_success);
     });
   });
 });
