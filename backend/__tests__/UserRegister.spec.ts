@@ -2,6 +2,7 @@ import supertest from "supertest";
 import { app } from "../src/app";
 import { User } from "../src/user/user";
 import { sequelize } from "../src/config/database";
+import { interactsWithMail } from "nodemailer-stub";
 
 beforeAll(() => {
   return sequelize.sync();
@@ -187,6 +188,17 @@ describe("User Register", () => {
     const users = await User.findAll();
     const savedUser = users[0];
     expect(savedUser.activationToken.length).toBe(16);
+  });
+
+  it("sends an Account activation email with activationToken", async () => {
+    await postUser();
+
+    const lastMail = interactsWithMail.lastMail();
+    expect(lastMail.to[0]).toContain("user1@mail.com");
+
+    const users = await User.findAll();
+    const savedUser = users[0];
+    expect(lastMail.content).toContain(savedUser.activationToken);
   });
 
   describe("Internationalization", () => {
