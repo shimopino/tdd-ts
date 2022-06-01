@@ -7,6 +7,7 @@ class User extends Model {
   declare email: string;
   declare password: string;
   declare inactive: boolean;
+  declare activationToken: string;
 }
 
 User.init(
@@ -24,6 +25,9 @@ User.init(
     inactive: {
       type: new DataTypes.BOOLEAN(),
       defaultValue: true,
+    },
+    activationToken: {
+      type: new DataTypes.STRING(),
     },
   },
   {
