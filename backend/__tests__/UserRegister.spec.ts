@@ -172,6 +172,15 @@ describe("User Register", () => {
     expect(savedUser.inactive).toBeTruthy();
   });
 
+  it("creates user in inactive mode even the request bodt contains inactive", async () => {
+    const newUser = { ...validUser, inactive: false };
+    await postUser(newUser);
+
+    const users = await User.findAll();
+    const savedUser = users[0];
+    expect(savedUser.inactive).toBeTruthy();
+  });
+
   describe("Internationalization", () => {
     const username_null = "ユーザー名にNullを指定できません";
     const username_size = "4文字から32文字までの長さを指定してください";
