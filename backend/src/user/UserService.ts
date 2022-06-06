@@ -3,6 +3,7 @@ import { randomBytes } from "crypto";
 import { CreateUserDTO } from "./dtos";
 import { User } from "./user";
 import { sendAccountActivation } from "../email/EmailService";
+import { sequelize } from "../config/database";
 
 const generateToken = (length: number) => {
   return randomBytes(length).toString("hex").substring(0, length);
@@ -20,9 +21,17 @@ const save = async (body: CreateUserDTO) => {
     password: hashed,
     activationToken: generateToken(16),
   };
-  await User.create(user);
 
-  await sendAccountActivation(email, user.activationToken);
+  const transaction = await sequelize.transaction();
+  await User.create(user, { transaction });
+
+  try {
+    await sendAccountActivation(email, user.activationToken);
+    transaction.commit();
+  } catch (err) {
+    transaction.rollback();
+    throw new Error((err as Error).message);
+  }
 };
 
 const findByEmail = async (email: string) => {
