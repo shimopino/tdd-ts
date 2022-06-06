@@ -201,6 +201,12 @@ describe("User Register", () => {
     expect(lastMail.content).toContain(savedUser.activationToken);
   });
 
+  it("returns 502 Bad Gateway when sending email fails", async () => {
+    const response = await postUser();
+
+    expect(response.status).toBe(502);
+  });
+
   describe("Internationalization", () => {
     const username_null = "ユーザー名にNullを指定できません";
     const username_size = "4文字から32文字までの長さを指定してください";
