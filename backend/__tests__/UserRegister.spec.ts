@@ -3,6 +3,7 @@ import { app } from "../src/app";
 import { User } from "../src/user/user";
 import { sequelize } from "../src/config/database";
 import { interactsWithMail } from "nodemailer-stub";
+import * as EmailService from "../src/email/EmailService";
 
 beforeAll(() => {
   return sequelize.sync();
@@ -202,9 +203,29 @@ describe("User Register", () => {
   });
 
   it("returns 502 Bad Gateway when sending email fails", async () => {
+    const mockSendAccountActivation = jest
+      .spyOn(EmailService, "sendAccountActivation")
+      .mockRejectedValueOnce({
+        message: "Failed to deliver email",
+      });
     const response = await postUser();
 
     expect(response.status).toBe(502);
+
+    mockSendAccountActivation.mockRestore();
+  });
+
+  it("returns email failure when sending email fails", async () => {
+    const mockSendAccountActivation = jest
+      .spyOn(EmailService, "sendAccountActivation")
+      .mockRejectedValueOnce({
+        message: "Failed to deliver email",
+      });
+    const response = await postUser();
+
+    expect(response.body.message).toBe("Email Failure");
+
+    mockSendAccountActivation.mockRestore();
   });
 
   describe("Internationalization", () => {
