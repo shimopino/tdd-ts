@@ -239,6 +239,7 @@ describe("User Register", () => {
       "パスワードには最低でも大文字1文字、小文字1文字、数字1文字を含んでいる必要があります";
     const email_in_use = "メールアドレスは既に使用されています";
     const user_create_success = "ユーザーを作成しました";
+    const email_failure = "メール送信に失敗しました";
 
     it.each`
       field         | value              | message
@@ -286,6 +287,19 @@ describe("User Register", () => {
     it(`returns success message of ${user_create_success} when signup request is valid`, async () => {
       const response = await postUser({ ...validUser }, { language: "ja" });
       expect(response.body.message).toBe(user_create_success);
+    });
+
+    it(`returns ${email_failure} message when sending email fails and language is ja`, async () => {
+      const mockSendAccountActivation = jest
+        .spyOn(EmailService, "sendAccountActivation")
+        .mockRejectedValueOnce({
+          message: "Failed to deliver email",
+        });
+      const response = await postUser({ ...validUser }, { language: "ja" });
+
+      expect(response.body.message).toBe(email_failure);
+
+      mockSendAccountActivation.mockRestore();
     });
   });
 });
