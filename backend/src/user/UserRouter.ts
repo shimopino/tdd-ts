@@ -46,9 +46,13 @@ router.post(
       return res.status(400).send({ validationErrors });
     }
 
-    const user = { ...req.body };
-    await save(user);
-    return res.status(201).send({ message: req.t("user_create_success") });
+    try {
+      const user = { ...req.body };
+      await save(user);
+      return res.status(201).send({ message: req.t("user_create_success") });
+    } catch (err) {
+      return res.status(502).send();
+    }
   }
 );
 
