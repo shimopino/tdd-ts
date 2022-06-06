@@ -228,6 +228,21 @@ describe("User Register", () => {
     mockSendAccountActivation.mockRestore();
   });
 
+  it("does not save user to database if activation email fails", async () => {
+    const mockSendAccountActivation = jest
+      .spyOn(EmailService, "sendAccountActivation")
+      .mockRejectedValueOnce({
+        message: "Failed to deliver email",
+      });
+    const response = await postUser();
+
+    expect(response.body.message).toBe("Email Failure");
+    mockSendAccountActivation.mockRestore();
+
+    const users = await User.findAll();
+    expect(users.length).toBe(0);
+  });
+
   describe("Internationalization", () => {
     const username_null = "ユーザー名にNullを指定できません";
     const username_size = "4文字から32文字までの長さを指定してください";
