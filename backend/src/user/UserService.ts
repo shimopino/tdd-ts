@@ -4,6 +4,7 @@ import { CreateUserDTO } from "./dtos";
 import { User } from "./user";
 import { sendAccountActivation } from "../email/EmailService";
 import { sequelize } from "../config/database";
+import { EmailException } from "../email/EmailFailure";
 
 const generateToken = (length: number) => {
   return randomBytes(length).toString("hex").substring(0, length);
@@ -30,7 +31,7 @@ const save = async (body: CreateUserDTO) => {
     transaction.commit();
   } catch (err) {
     transaction.rollback();
-    throw new Error((err as Error).message);
+    throw new EmailException();
   }
 };
 
